@@ -51,8 +51,8 @@
     </div>
     <div class="container">
       <nav class="sidebar">
-          <a href="/">Home</a>
-        <a href="/sections/filters.html">Filters</a>
+          <a href="/finch/">Home</a>
+        <a href="/finch/sections/filters.html">Filters</a>
         
       </nav>
       <div class="content">
@@ -66,7 +66,7 @@ documentation</a>. Also, there are examples of using finch in the
 frontmatter into (usually) HTML using templates written in Jingoo (an OCaml templating language that is very similar to
 Jinja2).</p>
 <p>To build a site with finch simply run <code>finch</code> in the appropriate directory. Do <code>finch -help</code> to see options.</p>
-<h2 id="Content">Content</h2><p>A content document either consists of Markdown and some YAML frontmatter, or just some YAML if it is a <code>.yml</code> or <code>.yaml</code>
+<h2 id="Content">Content</h2><p>A content document either consists of Markdown and some YAML frontmatter (delimited by <code>---</code> lines), or just some YAML if it is a <code>.yml</code> or <code>.yaml</code>
 file. For example:</p>
 <pre><code>---
 layout: post.html
