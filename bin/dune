@@ -1,0 +1,6 @@
+(executable
+ (name finch)
+ (public_name finch)
+ (libraries lib core)
+ (preprocess
+  (pps ppx_jane)))

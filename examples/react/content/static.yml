@@ -1,0 +1,2 @@
+layout: static_react.html
+component: "./src/component.js"

@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <link rel="icon" href="data:,">
+    <style>
+    body {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      background-color: #FFFFF1;
+    }
+
+    .everything {
+        margin: auto auto;
+        max-width: 120ch;
+    }
+
+    .container {
+        margin: auto auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        padding-top: 1.5em;
+        padding-right: 6em;
+        font-variant: small-caps;
+    }
+
+    .content {
+        max-width: 72ch;
+    }
+
+    .secondary {
+        color: #AAA;
+    }
+
+    </style>
+    <link rel="stylesheet" href="/static/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/static/styles.css"></noscript>
+  </head>
+  <body>
+    <div class = "everything">
+    <div class ="title">
+      <h1>Home</h1>
+    </div>
+    <div class="container">
+      <nav class="sidebar">
+          <a href="/">Home</a>
+        <a href="/sections/react.html">Using finch with React</a>
+        
+      </nav>
+      <div class="content">
+        
+        <p>The documentation for <a href='https://github.com/roddyyaga/finch'>finch</a>. Other relevant sources of information are the <a href='https://tategakibunko.github.io/jingoo/'>Jingoo
+documentation</a>, the <a href='https://jinja.palletsprojects.com/en/2.11.x/'>Jinja2
+documentation</a>, the <a href='https://yaml.org/spec/1.2/spec.html'>YAML specification</a> and the <a href='https://daringfireball.net/projects/markdown/syntax'>Markdown
+documentation</a>. Also, there are examples of using finch in the
+<code>examples</code> directory on GitHub.</p>
+<p>Finch is a site generator in the style of Jekyll and Hugo. It compiles documents written in Markdown with optional
+frontmatter into (usually) HTML using templates written in Jingoo (an OCaml templating language that is very similar to
+Jinja2).</p>
+<h2 id="Content">Content</h2><p>A content document either consists of Markdown and some YAML frontmatter, or just some YAML if it is a <code>.yml</code> or <code>.yaml</code>
+file. For example:</p>
+<pre><code>---
+layout: post.html
+title: &quot;When I was nearly thirteen...&quot;
+author: &quot;Scout&quot;
+date: &quot;1960-7-11&quot;
+---
+... my brother my brother Jem got his arm badly broken at the elbow.</code></pre>
+
+<p>Each content document will be compiled using the layout specified in the frontmatter. If no layout is specified, the
+template <code>default.html</code> in the root of the layouts directory will be used. The output site directory has the same
+structure as the content directory, with the compiled version of the file <code>content.content-extension</code> with layout
+<code>layout.layout-extension</code> being called <code>content.layout-extension</code>.</p>
+<p>The top-level YAML in a content document must be an object. Its values may also be objects or lists as well as simple
+values.</p>
+<p>Currently three keys in the frontmatter (or content of a YAML file) are treated specially:</p>
+<ul><li><code>layout</code> specifies the layout file that should be used to compile the file</li><li><code>content</code> will override the output of the Markdown content</li><li><code>date</code> will be parsed either as <code>%Y-%m-%d</code> or as an ISO timestamp, and output as an ISO timestamp string in the template</li></ul>
+
+<p>Note that the content of a content file is just treated as Markdown, you can&#39;t use Jingoo templating in it.</p>
+<h2 id="Data">Data</h2><p>Finch can also use a directory of data files when compiling. The files in this have the same format as the content, the
+only difference being that they will not be compiled into output.</p>
+<h2 id="Layouts">Layouts</h2><p>A layout file is a Jingoo template. A layout can have variables substituted into it with the syntax <code>{{ variable }}</code>.
+Layouts can have logic using commands such as <code>{% if ... %}</code> and <code>{% for ... in ... %}</code>, and one layout can reference
+another using <code>{% extends &quot;parent.template&quot; %}</code> and blocks, or <code>{% include &quot;other.template&quot; %}</code>. For more details, see
+the documentation of Jingoo and Jinja2.</p>
+<p>The variables provided in the frontmatter of the file being compiled are available in the layout as <code>page.variable</code>,
+with the compiled Markdown being <code>page.content</code>. Other variables will be looked up in the following places (in this
+order):</p>
+<ul><li>In the data directory</li><li>In the content directory</li><li>As filters</li></ul>
+
+<p>In the data and content directories, the variable <code>foo</code> corresponds to either a file <code>foo.extension</code> or a directory
+<code>foo</code> in the root of the relevant directory. In the case where it is a file, the result will be a object with the same
+structure as <code>page</code> (i.e. with attributes such as <code>content</code> and <code>layout</code>). When it is a directory, the result will be an
+object with the attribute <code>files</code> corresponding to the objects for the files in the directory, and other attributes
+corresponding to the child directories.</p>
+<p>For example, with this data directory:</p>
+<pre><code>data/
+    foo/
+        bar/
+            baz.md
+        qux.md
+        quux.md</code></pre><p>the variable <code>foo</code> would correspond to the following object in a template:</p>
+<pre><code>{
+    bar: {
+        files: [
+            {
+                content: ...
+                ...
+            }
+         },
+    files: [
+        {
+            content: ...
+            ...
+        },
+        {
+            content: ...
+            ...
+        },
+    ]
+}</code></pre>
+        
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

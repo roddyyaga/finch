@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+  </head>
+  <body>
+      <h1>{{ page.title }}</h1>
+      {{ page.date }}
+      <h2> {{ page.date | nullmap(date("%Y-%m-%d")) }}</h2>
+      {{ page.content }}
+  </body>
+</html>

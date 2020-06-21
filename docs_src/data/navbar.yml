@@ -1,0 +1,9 @@
+entries:
+  - name: Home
+    link: /
+  - name: Blog
+    link: /blog
+  - name: GitHub
+    link: https://github.com/roddyyaga
+  - name: Résumé
+    link: /static/roddy_macsween_cv.pdf

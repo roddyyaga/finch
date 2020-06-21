@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+  </head>
+  <body>
+      <h1>{{ page.title }}</h1>
+      {{ navigation.foo }}
+      <p> Atticus' posts:</p>
+      {% for post in posts.atticus.files -%}
+      <p> <a href="{{ post.link }}">{{ post.title }}</a></p>
+      {% endfor %}
+      <p> Scout's posts:</p>
+      {% for post in posts.scout.files -%}
+      <p> <a href="{{ post.link }}">{{ post.title }}</a></p>
+      {% endfor %}
+  </body>
+</html>

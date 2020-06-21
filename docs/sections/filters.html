@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Filters</title>
+    <link rel="icon" href="data:,">
+    <style>
+    body {
+      font-size: 16px;
+      font-family: sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #FFF;
+    }
+
+    .everything {
+        margin: auto auto;
+        max-width: 120ch;
+    }
+
+    .container {
+        margin: auto auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        padding-top: 1.5em;
+        padding-right: 6em;
+        font-variant: small-caps;
+    }
+
+    .content {
+        max-width: 90ch;
+    }
+
+    .secondary {
+        color: #AAA;
+    }
+
+    </style>
+    <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
+  </head>
+  <body>
+    <div class = "everything">
+    <div class ="title">
+      <h1>Filters</h1>
+    </div>
+    <div class="container">
+      <nav class="sidebar">
+          <a href="/">Home</a>
+        <a href="/sections/filters.html">Filters</a>
+        
+      </nav>
+      <div class="content">
+        
+        <p>Finch provides several additional filters for use in templates.</p>
+<h2 id="strftime">strftime</h2><p><code>strftime(fmt, date)</code> parses the string <code>date</code> as an ISO 8601 timestamp and then formats it according to <code>fmt</code> (see
+<a href='https://www.man7.org/linux/man-pages/man3/strftime.3.html'>here</a> for specification of the format string).</p>
+<h2 id="date">date</h2><p><code>date</code> is an alias for <code>strftime</code>.</p>
+<h2 id="strptime">strptime</h2><p><code>strptime(fmt, date)</code> parses the string <code>date</code> according to the format string <code>fmt</code> and then formats it as an ISO 8601
+timestamp string.</p>
+<h2 id="react">react</h2><p><code>react(source)</code> looks for a JavaScript file at the path <code>source</code> (relative to where finch has been called from) which should export a function <code>make</code> that is a React component. It returns the result of <code>ReactDOMServer.renderToString(React.createElement(make, { }))</code>.</p>
+<h2 id="react-static">react_static</h2><p><code>react_static(source)</code> is the same as <code>react</code>, except that it calls <code>ReactDOMServer.renderToStaticMarkup</code> instead of
+<code>ReactDOMServer.renderToString</code> (see
+<a href='https://reactjs.org/docs/react-dom-server.html#rendertostaticmarkup'>here</a>
+for the difference).</p>
+
+        
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
