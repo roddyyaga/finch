@@ -1,3 +1,5 @@
+![Build](https://github.com/roddyyaga/finch/workflows/Build%20and%20test/badge.svg)
+
 # Finch
 A simple and fast<sup id="a1">[1](#f1)</sup> site generator.
 
