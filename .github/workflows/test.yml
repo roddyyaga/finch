@@ -1,0 +1,24 @@
+name: "Build and test"
+on: [push]
+jobs:
+  run:
+    name: "Build and test"
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        ocaml-version: ['4.02.3', '4.07.1', '4.08.1', '4.09.1', '4.10.0']
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Setup OCaml
+      uses: avsm/setup-ocaml@master
+      with:
+        ocaml-version: ${{ matrix.ocaml-version }}
+
+    - run: opam pin add finch --no-action .
+    - run: OPAMSOLVERTIMEOUT=3600 opam depext -yt finch
+    - run: OPAMSOLVERTIMEOUT=3600 opam install -t . --deps-only --locked
+    - run: opam exec -- dune build
+    - run: opam exec -- dune runtest
