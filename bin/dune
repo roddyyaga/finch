@@ -3,4 +3,4 @@
  (public_name finch)
  (libraries lib core)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_let)))
