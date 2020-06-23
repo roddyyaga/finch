@@ -2,6 +2,5 @@
  (name finch)
  (public_name finch)
  (libraries lib core)
- (link_flags :standard -cclib -static)
  (preprocess
   (pps ppx_let)))

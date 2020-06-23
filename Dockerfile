@@ -7,12 +7,12 @@ WORKDIR /finch
 RUN cd /home/opam/opam-repository && git pull && cd /finch
 
 COPY finch.opam .
-RUN opam switch 4.10 &&\
+RUN opam switch 4.09 &&\
     eval $(opam env)
 RUN opam pin -yn finch .
 RUN opam update
 ENV OPAMSOLVERTIMEOUT=3600
-RUN sudo apt-get update
+# RUN sudo apt-get update
 RUN opam depext finch
 RUN opam install --deps-only finch
 # TODO - figure out exactly why chown necessary
@@ -23,7 +23,9 @@ RUN opam install --deps-only finch
 # TODO - determine whether removing the egrep and sed from that post in the depext command was correct
 RUN sudo chown -R opam:nogroup . && opam depext -ln finch > depexts
 COPY . .
+RUN patch static-dune.patch bin/dune
 RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune external-lib-deps --missing @install && dune build @install
+RUN mkdir finch && chmod 777 finch
 # RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune build @install && opam depext -ln app > depexts
 
 # Create the production image
@@ -45,7 +47,7 @@ RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune external-lib-deps -
 
 FROM scratch
 COPY --from=0 /finch/_build/install/default/bin/finch /bin/finch.exe
-RUN mkdir finch
+COPY --from=0 /finch/finch /finch
 WORKDIR finch
 ENTRYPOINT ["/bin/finch.exe"]
 

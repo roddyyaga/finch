@@ -1,0 +1,9 @@
+--- bin/dune	2020-06-23 13:54:51.163688750 +0100
++++ static-bin-dune	2020-06-23 13:54:45.370086518 +0100
+@@ -2,5 +2,6 @@
+  (name finch)
+  (public_name finch)
+  (libraries lib core)
++ (link_flags :standard -cclib -static)
+  (preprocess
+   (pps ppx_let)))
