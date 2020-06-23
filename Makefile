@@ -12,3 +12,6 @@ clean:
 
 watch:
 	dune build @all --watch
+
+doc:
+	finch -root docs_src -output docs

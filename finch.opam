@@ -11,6 +11,7 @@ bug-reports: "https://github.com/roddyyaga/finch/issues"
 depends: [
   "dune" {>= "2.6"}
   "core"
+  "ppx_let" {>= "v0.12"}
   "omd"
   "yaml"
   "jingoo" {>= "1.4.0"}

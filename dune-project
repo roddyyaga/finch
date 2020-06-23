@@ -23,6 +23,8 @@
  (depends
   dune
   core
+  (ppx_let
+   (>= "v0.12"))
   omd
   yaml
   (jingoo

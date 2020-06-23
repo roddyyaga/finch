@@ -44,6 +44,7 @@ let command =
           ~doc:"don't delete the output directory before building"
       in
       fun () ->
+        Stdio.print_endline "a";
         let content_root = Option.value content_root ~default:"content" in
         let layouts_root = Option.value layouts_root ~default:"layouts" in
         let data_root = Option.value data_root ~default:"data" in
@@ -60,12 +61,13 @@ let command =
           | None -> (content_root, layouts_root, data_root, static_dir)
         in
 
-        ( if not no_delete then
+        ( if (not no_delete) && Sys.file_exists_exn output_root then
           let delete_exit_code =
             Unix.system (Printf.sprintf "rm -r %s" output_root)
           in
           ignore delete_exit_code );
 
+        Stdio.print_endline "b";
         if Sys.file_exists_exn static_dir then (
           Unix.mkdir_p output_root;
           let copy_exit_code =
@@ -73,6 +75,7 @@ let command =
           in
           ignore copy_exit_code );
 
+        Stdio.print_endline "c";
         let jobs = Option.value jobs ~default:4 in
         if not (Sys.file_exists_exn content_root) then
           Printf.failwithf "Path to contents '%s' doesn't exist!" content_root
@@ -81,6 +84,7 @@ let command =
           Printf.failwithf "Layouts directory '%s' doesn't exist!" layouts_root
             ();
 
+        Stdio.print_endline "d";
         let content_root, content_file_paths =
           if Sys.is_directory_exn content_root then
             (content_root, Lib.Files.contained_files content_root)
@@ -97,6 +101,7 @@ let command =
         let process_paths = chunk_list chunk_lengths content_file_paths in
         assert (List.length process_paths = jobs);
         assert (List.(length (concat process_paths)) = paths_count);
+        Stdio.print_endline "e";
 
         let rec get_content_file_paths process_paths fork_result =
           match fork_result with
@@ -110,10 +115,12 @@ let command =
         in
         let fork_result = Unix.fork () in
 
+        Stdio.print_endline "f";
         let content_file_paths =
           get_content_file_paths process_paths fork_result
         in
         List.iter content_file_paths ~f:(fun file ->
+            Stdio.print_endline file;
             let ( / ) = Filename.concat in
             let content =
               file |> Lib.Load.data content_root |> Lib.Content.of_content_file
