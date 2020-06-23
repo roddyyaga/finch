@@ -23,9 +23,8 @@ RUN opam install --deps-only finch
 # TODO - determine whether removing the egrep and sed from that post in the depext command was correct
 RUN sudo chown -R opam:nogroup . && opam depext -ln finch > depexts
 COPY . .
-RUN patch static-dune.patch bin/dune
-RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune external-lib-deps --missing @install && dune build @install
-RUN mkdir finch && chmod 777 finch
+RUN eval $(opam env) && sudo chown -R opam:nogroup . && patch bin/dune static-dune.patch && dune build @install
+RUN mkdir finch
 # RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune build @install && opam depext -ln app > depexts
 
 # Create the production image

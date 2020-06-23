@@ -101,21 +101,20 @@ let command =
         assert (List.length process_paths = jobs);
         assert (List.(length (concat process_paths)) = paths_count);
 
-        let rec get_content_file_paths process_paths fork_result =
-          match fork_result with
-          | `In_the_parent _ -> (
-              match process_paths with
-              | [] -> failwith ""
-              | [ last_paths ] -> last_paths
-              | _child_paths :: rest ->
-                  get_content_file_paths rest (Unix.fork ()) )
-          | `In_the_child -> List.hd_exn process_paths
+        let job_id =
+          let rec iter job_id fork_result =
+            match fork_result with
+            | `In_the_child -> job_id - 1
+            | `In_the_parent _ ->
+                if job_id < List.length process_paths then
+                  iter (job_id + 1) (Unix.fork ())
+                else 0
+          in
+          iter 1 (`In_the_parent (Unix.getpid ()))
         in
-        let fork_result = Unix.fork () in
 
-        let content_file_paths =
-          get_content_file_paths process_paths fork_result
-        in
+        let content_file_paths = List.nth_exn process_paths job_id in
+
         List.iter content_file_paths ~f:(fun file ->
             if list_content then Stdio.print_endline file;
             let ( / ) = Filename.concat in
