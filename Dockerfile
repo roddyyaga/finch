@@ -1,5 +1,5 @@
 # Build the app
-FROM ocaml/opam2:debian-stable
+FROM ocaml/opam2:alpine
 
 WORKDIR /finch
 
@@ -43,12 +43,18 @@ RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune external-lib-deps -
 # EXPOSE 3000
 # CMD ./main.exe
 
-FROM debian:buster-slim
-RUN mkdir finch
-COPY --from=0 /finch/depexts depexts
-RUN apt-get update
-RUN cat depexts | xargs apt-get install --no-install-recommends -y && rm -rf /var/lib/apt/lists/*
-RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib{apit,dpkg,cache,log}/
+FROM scratch
 COPY --from=0 /finch/_build/install/default/bin/finch /bin/finch.exe
+RUN mkdir finch
 WORKDIR finch
 ENTRYPOINT ["/bin/finch.exe"]
+
+# FROM debian:buster-slim
+# RUN mkdir finch
+# COPY --from=0 /finch/depexts depexts
+# RUN apt-get update
+# RUN cat depexts | xargs apt-get install --no-install-recommends -y && rm -rf /var/lib/apt/lists/*
+# RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib{apit,dpkg,cache,log}/
+# COPY --from=0 /finch/_build/install/default/bin/finch /bin/finch.exe
+# WORKDIR finch
+# ENTRYPOINT ["/bin/finch.exe"]
