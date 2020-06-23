@@ -5,10 +5,10 @@ jobs:
     name: "Build and publish Docker image"
     runs-on: "ubuntu-latest"
     steps:
-      - name: "Build and publish Docker image"
-        uses: docker/build-push-action@v1
+      - uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: roddylm/finch
+          repository: myorg/myrepository
           tag_with_ref: true
+          tag_with_sha: true
