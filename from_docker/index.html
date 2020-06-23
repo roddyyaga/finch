@@ -7,9 +7,10 @@
     <style>
     body {
       font-size: 16px;
+      font-family: sans-serif;
       line-height: 1.6;
       color: #333;
-      background-color: #FFFFF1;
+      background-color: #FFF;
     }
 
     .everything {
@@ -32,7 +33,7 @@
     }
 
     .content {
-        max-width: 72ch;
+        max-width: 90ch;
     }
 
     .secondary {
@@ -40,8 +41,8 @@
     }
 
     </style>
-    <link rel="stylesheet" href="/static/styles.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/static/styles.css"></noscript>
+    <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
   </head>
   <body>
     <div class = "everything">
@@ -50,8 +51,8 @@
     </div>
     <div class="container">
       <nav class="sidebar">
-          <a href="/">Home</a>
-        <a href="/sections/react.html">Using finch with React</a>
+          <a href="/finch/">Home</a>
+        <a href="/finch/sections/filters.html">Filters</a>
         
       </nav>
       <div class="content">
@@ -64,7 +65,8 @@ documentation</a>. Also, there are examples of using finch in the
 <p>Finch is a site generator in the style of Jekyll and Hugo. It compiles documents written in Markdown with optional
 frontmatter into (usually) HTML using templates written in Jingoo (an OCaml templating language that is very similar to
 Jinja2).</p>
-<h2 id="Content">Content</h2><p>A content document either consists of Markdown and some YAML frontmatter, or just some YAML if it is a <code>.yml</code> or <code>.yaml</code>
+<p>To build a site with finch simply run <code>finch</code> in the appropriate directory. Do <code>finch -help</code> to see options.</p>
+<h2 id="Content">Content</h2><p>A content document either consists of Markdown and some YAML frontmatter (delimited by <code>---</code> lines), or just some YAML if it is a <code>.yml</code> or <code>.yaml</code>
 file. For example:</p>
 <pre><code>---
 layout: post.html
@@ -80,12 +82,13 @@ structure as the content directory, with the compiled version of the file <code>
 <code>layout.layout-extension</code> being called <code>content.layout-extension</code>.</p>
 <p>The top-level YAML in a content document must be an object. Its values may also be objects or lists as well as simple
 values.</p>
-<p>Currently three keys in the frontmatter (or content of a YAML file) are treated specially:</p>
-<ul><li><code>layout</code> specifies the layout file that should be used to compile the file</li><li><code>content</code> will override the output of the Markdown content</li><li><code>date</code> will be parsed either as <code>%Y-%m-%d</code> or as an ISO timestamp, and output as an ISO timestamp string in the template</li></ul>
+<p>Currently four keys in the frontmatter (or content of a YAML file) are treated specially:</p>
+<ul><li><code>layout</code> specifies the layout file that should be used to compile the file</li><li><code>content</code> will override the output of the Markdown content</li><li><code>date</code> will be parsed either as <code>%Y-%m-%d</code> or as an ISO timestamp, and output as an ISO timestamp string in the template</li><li><code>link</code> will override the default link for the output, which is the path to it from the root of the output directory</li></ul>
 
 <p>Note that the content of a content file is just treated as Markdown, you can&#39;t use Jingoo templating in it.</p>
 <h2 id="Data">Data</h2><p>Finch can also use a directory of data files when compiling. The files in this have the same format as the content, the
-only difference being that they will not be compiled into output.</p>
+only difference being that they will not be compiled into output (and therefore their objects in templates won&#39;t have a
+<code>link</code> attribute).</p>
 <h2 id="Layouts">Layouts</h2><p>A layout file is a Jingoo template. A layout can have variables substituted into it with the syntax <code>{{ variable }}</code>.
 Layouts can have logic using commands such as <code>{% if ... %}</code> and <code>{% for ... in ... %}</code>, and one layout can reference
 another using <code>{% extends &quot;parent.template&quot; %}</code> and blocks, or <code>{% include &quot;other.template&quot; %}</code>. For more details, see
@@ -110,22 +113,29 @@ corresponding to the child directories.</p>
 <pre><code>{
     bar: {
         files: [
+            # baz.md
             {
                 content: ...
                 ...
             }
          },
     files: [
+        # qux.md
         {
             content: ...
             ...
         },
+        # quux.md
         {
             content: ...
             ...
         },
     ]
 }</code></pre>
+
+<h2 id="Static">Static</h2><p>Any static files you want to include directly in the output can be put in the static directory. It will be copied over before
+content is compiled, so may be overwritten by compiled content with the same name.</p>
+
         
       </div>
     </div>
