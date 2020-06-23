@@ -10,7 +10,10 @@ Can be used as:
 (see the examples directory)
 
 ## Installation
+With opam: `opam pin add finch https://github.com/roddyyaga/finch.git`
 
+It is also available as a Docker container:
+`docker run -v $(pwd):/finch roddylm/finch:latest -help`
 
 ## Use
 Make a directory called `layouts`. Add template files to it with `{{ page.content }}` where the content of a page being

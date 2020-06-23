@@ -9,9 +9,10 @@ homepage: "https://github.com/roddyyaga/finch"
 doc: "https://roddyyaga.github.io/finch"
 bug-reports: "https://github.com/roddyyaga/finch/issues"
 depends: [
+  "ocaml" {>= "4.07"}
   "dune" {>= "2.6"}
   "core"
-  "ppx_let" {>= "v0.12"}
+  "ppx_let"
   "omd"
   "yaml"
   "jingoo" {>= "1.4.0"}

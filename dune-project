@@ -21,10 +21,11 @@
  (name finch)
  (synopsis "Simple and fast site generator")
  (depends
+  (ocaml
+   (>= "4.07"))
   dune
   core
-  (ppx_let
-   (>= "v0.12"))
+  ppx_let
   omd
   yaml
   (jingoo
