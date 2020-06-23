@@ -3,7 +3,7 @@ on: [push]
 jobs:
   run:
     name: "Build and publish Docker image"
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: "ubuntu-latest"
     steps:
       - name: "Build and publish Docker image"
         uses: docker/build-push-action@v1
@@ -11,4 +11,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: roddylm/finch
-          tags: latest
+          tag_with_ref: true
