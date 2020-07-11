@@ -10,7 +10,7 @@ Can be used as:
 (see the examples directory)
 
 ## Installation
-With opam: `opam pin add finch https://github.com/roddyyaga/finch.git`
+With opam: `opam install finch`
 
 It is also available as a Docker container:
 `docker run -v $(pwd):/finch roddylm/finch:latest -help`
