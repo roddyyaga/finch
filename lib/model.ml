@@ -22,17 +22,19 @@ let of_data { Data.yaml; markdown; _ } =
   in
   markdown_content @ yaml_pairs
 
-let of_content { Content.layout; data = { yaml; markdown; file } } =
+let of_content ~pretty_urls { Content.layout; data = { yaml; markdown; file } }
+    =
   let data_model = of_data { yaml; markdown; file } in
   let link =
-    if List.Assoc.find data_model "link" ~equal:String.equal |> Option.is_none
-    then
-      [
-        ( "link",
-          Jg_types.Tstr
-            (Files.output_path ~content_file:file ~layout_file:layout) );
-      ]
-    else []
+    match List.Assoc.find data_model "link" ~equal:String.equal with
+    | None ->
+        [
+          ( "link",
+            Jg_types.Tstr
+              (Files.output_path ~pretty_urls ~content_file:file
+                 ~layout_file:layout) );
+        ]
+    | Some link -> [ ("link", link) ]
   in
   link @ data_model
 
@@ -55,11 +57,13 @@ let rec of_directory of_file root directory =
   in
   Jg_types.(Tobj (("files", Tlist files) :: directories))
 
-let content_of_file content_root file =
+let content_of_file ~pretty_urls content_root file =
   Jg_types.Tobj
-    (file |> Load.data content_root |> Content.of_content_file |> of_content)
+    ( file |> Load.data content_root |> Content.of_content_file
+    |> of_content ~pretty_urls )
 
-let content_of_directory = of_directory content_of_file
+let content_of_directory ~pretty_urls =
+  of_directory (content_of_file ~pretty_urls)
 
 let data_of_file data_root file =
   Jg_types.Tobj (file |> Load.data data_root |> Data.of_file |> of_data)
@@ -96,7 +100,7 @@ let data_or_content_lookup ~of_file ~of_directory root key =
               | true -> Some (of_file root x)
               | false -> Some (of_directory root x) ) ) )
 
-let uncached_lookup ~content_root ~data_root key =
+let uncached_lookup ~pretty_urls ~content_root ~data_root key =
   let found_in_data =
     data_or_content_lookup ~of_file:data_of_file ~of_directory:data_of_directory
       data_root key
@@ -105,13 +109,15 @@ let uncached_lookup ~content_root ~data_root key =
   | Some data -> data
   | None -> (
       let found_in_content =
-        data_or_content_lookup ~of_file:content_of_file
-          ~of_directory:content_of_directory content_root key
+        data_or_content_lookup
+          ~of_file:(content_of_file ~pretty_urls)
+          ~of_directory:(content_of_directory ~pretty_urls)
+          content_root key
       in
       match found_in_content with
       | Some content -> content
       | None -> raise Caml.Not_found )
 
-let lookup ~content_root ~data_root key =
+let lookup ~pretty_urls ~content_root ~data_root key =
   Hashtbl.find_or_add file_models_cache key ~default:(fun () ->
-      uncached_lookup ~content_root ~data_root key)
+      uncached_lookup ~pretty_urls ~content_root ~data_root key)

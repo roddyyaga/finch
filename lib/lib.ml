@@ -1,13 +1,15 @@
 open Base
 open Jingoo
-module Load = Load
+module Config = Config
 module Content = Content
 module Files = Files
+module Load = Load
+module Model = Model
 
-let model_function ~content_root ~data_root content_model key =
+let model_function ~pretty_urls ~content_root ~data_root content_model key =
   match key with
   | "page" -> content_model
-  | other_key -> Model.lookup ~content_root ~data_root other_key
+  | other_key -> Model.lookup ~pretty_urls ~content_root ~data_root other_key
 
 let custom_filters =
   [
@@ -27,7 +29,9 @@ let env layouts_root =
     template_dirs = [ layouts_root ];
   }
 
-let make ~content_root ~data_root content layout =
-  let content_model = Jg_types.Tobj (Model.of_content content) in
-  let models = model_function ~content_root ~data_root content_model in
+let make ~pretty_urls ~content_root ~data_root content layout =
+  let content_model = Jg_types.Tobj (Model.of_content ~pretty_urls content) in
+  let models =
+    model_function ~pretty_urls ~content_root ~data_root content_model
+  in
   Jg_template2.Loaded.eval ~models layout

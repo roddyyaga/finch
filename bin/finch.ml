@@ -10,7 +10,11 @@ let command =
     ~readme:(fun () ->
       "See https://roddyyaga.github.io/finch for full documentation")
     Command.Let_syntax.(
-      let%map_open content_root =
+      let%map_open config_file =
+        flag "-config"
+          (optional Filename.arg_type)
+          ~doc:"filename path to config file (default ./finch.yml)"
+      and content_root =
         flag "-content"
           (optional Filename.arg_type)
           ~doc:"filename path to content (default ./content)"
@@ -39,6 +43,9 @@ let command =
       and jobs =
         flag "-j" (optional int)
           ~doc:"int maximum number of processes to use (default 4)"
+      and pretty_urls =
+        flag "-pretty-urls" no_arg
+          ~doc:"output 'some/path/index.html' rather than 'some/path.html'"
       and no_delete =
         flag "-no-delete" no_arg
           ~doc:"don't delete the output directory before building"
@@ -47,11 +54,27 @@ let command =
           ~doc:"print the content files that were processed"
       in
       fun () ->
-        let content_root = Option.value content_root ~default:"content" in
-        let layouts_root = Option.value layouts_root ~default:"layouts" in
-        let data_root = Option.value data_root ~default:"data" in
-        let static_dir = Option.value static_dir ~default:"static" in
-        let output_root = Option.value output_root ~default:"site" in
+        let config_file = Option.value config_file ~default:"finch.yml" in
+        let config_opt = Lib.Config.load config_file in
+
+        let content_root =
+          Lib.Config.get_opt config_opt content_root "content"
+        in
+        let layouts_root =
+          Lib.Config.get_opt config_opt layouts_root "layouts"
+        in
+        let data_root = Lib.Config.get_opt config_opt data_root "data" in
+        let static_dir = Lib.Config.get_opt config_opt static_dir "static" in
+        let output_root = Lib.Config.get_opt config_opt output_root "site" in
+
+        let no_delete = Lib.Config.get_bool config_opt no_delete "no_delete" in
+        let list_content =
+          Lib.Config.get_bool config_opt list_content "list_content"
+        in
+        let pretty_urls =
+          Lib.Config.get_bool config_opt pretty_urls "pretty_urls"
+        in
+
         let content_root, layouts_root, data_root, static_dir =
           match source_root with
           | Some dir ->
@@ -126,14 +149,18 @@ let command =
               Lib.Load.layout ~env:(Lib.env layouts_root) layout_file
             in
             let output_path_after_root =
-              Lib.Files.output_path ~content_file:file ~layout_file
+              List.Assoc.find_exn ~equal:String.equal
+                (Lib.Model.of_content ~pretty_urls content)
+                "link"
+              |> Jingoo.Jg_types.unbox_string
             in
             let output =
-              Lib.make ~content_root ~data_root content layout.template
+              Lib.make ~pretty_urls ~content_root ~data_root content
+                layout.template
             in
             let output_path = output_root / output_path_after_root in
             let output_dir = Filename.dirname output_path in
             Unix.mkdir_p output_dir;
             Out_channel.write_all ~data:output output_path))
 
-let () = Command.run ~version:"0.1.1" ~build_info:"Development" command
+let () = Command.run ~version:"0.1.1" ~build_info:"" command
