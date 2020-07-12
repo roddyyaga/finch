@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Configuration</title>
+    <link rel="icon" href="data:,">
+    <style>
+    body {
+      font-size: 16px;
+      font-family: sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #FFF;
+    }
+
+    .everything {
+        margin: auto auto;
+        max-width: 120ch;
+    }
+
+    .container {
+        margin: auto auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        padding-top: 1.5em;
+        padding-right: 6em;
+        font-variant: small-caps;
+    }
+
+    .content {
+        max-width: 90ch;
+    }
+
+    .secondary {
+        color: #AAA;
+    }
+
+    </style>
+    <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
+  </head>
+  <body>
+    <div class = "everything">
+    <div class ="title">
+      <h1>Configuration</h1>
+    </div>
+    <div class="container">
+      <nav class="sidebar">
+          <a href="/finch/">Home</a>
+        <a href="/finch/sections/filters/">Filters</a>
+        <a href="/finch/sections/configuration/">Configuration</a>
+        
+      </nav>
+      <div class="content">
+        
+        <p>The following options can be set either in a configuration file (by default <code>finch.yml</code>) or as command line flags, with the latter taking precedence. The configuration file should be YAML, for example:</p>
+<pre><code>root: docs_src
+output: docs
+pretty_urls: true</code></pre>
+
+<p>Command line flags containing &quot;-&quot; instead have &quot;_&quot; as configuration keys.</p>
+<h2 id="Options">Options</h2>
+
+<ul><li><code>content: path</code> specifies the path to the content directory (default <code>./content</code>)</li><li><code>data: path</code> specifies the path to the data directory (default <code>./data</code>)</li><li><code>layouts: path</code> specifies the path to the data directory (default <code>./layouts</code>)</li><li><code>list_content: bool</code> if set, names of processed content files will be printed</li><li><code>no_delete: bool</code> if set, the output directory won&#39;t be deleted before building</li><li><code>output: path</code> specifies the path of the output directory (default <code>./site</code>)</li><li><code>pretty_urls: bool</code> if set, <code>some/path/index.html</code> will be generated instead of <code>some/path.html</code></li><li><code>root: path</code> specifies the root for content, layouts, data and static (default <code>.</code>)</li><li><code>static: path</code> specifies the path to the static directory (default <code>./static</code>)</li></ul>
+
+<p>Additionally <code>config</code> and <code>j</code> (jobs) may be set as command line flags only.</p>
+
+        
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

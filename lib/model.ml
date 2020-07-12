@@ -22,6 +22,16 @@ let of_data { Data.yaml; markdown; _ } =
   in
   markdown_content @ yaml_pairs
 
+let output_link ~pretty_urls ~content_file ~layout_file =
+  let name, _ = Filename.split_extension content_file in
+  let _, extension = Filename.split_extension layout_file in
+  let extension = Option.value extension ~default:"" in
+  match (pretty_urls, String.(Filename.basename name = "index"), extension) with
+  | true, false, "html" ->
+      if Filename.(check_suffix name dir_sep) then name
+      else name ^ Filename.dir_sep
+  | _ -> name ^ "." ^ extension
+
 let of_content ~pretty_urls { Content.layout; data = { yaml; markdown; file } }
     =
   let data_model = of_data { yaml; markdown; file } in
@@ -31,8 +41,8 @@ let of_content ~pretty_urls { Content.layout; data = { yaml; markdown; file } }
         [
           ( "link",
             Jg_types.Tstr
-              (Files.output_path ~pretty_urls ~content_file:file
-                 ~layout_file:layout) );
+              (output_link ~pretty_urls ~content_file:file ~layout_file:layout)
+          );
         ]
     | Some link -> [ ("link", link) ]
   in

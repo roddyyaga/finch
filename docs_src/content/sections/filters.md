@@ -1,7 +1,7 @@
 ---
 title: Filters
 ---
-Finch provides several additional filters for use in templates.
+Finch provides several additional filters for use in templates. See [here](http://tategakibunko.github.io/jingoo/templates/templates.en.html) for inbuilt Jingoo filters.
 
 ## strftime
 `strftime(fmt, date)` parses the string `date` as an ISO 8601 timestamp and then formats it according to `fmt` (see

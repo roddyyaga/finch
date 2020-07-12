@@ -104,5 +104,5 @@ the variable `foo` would correspond to the following object in a template:
 ```
 
 ## Static
-Any static files you want to include directly in the output can be put in the static directory. It will be copied over before
+Any static files you want to include directly in the output can be put in the static directory. They will be copied over before
 content is compiled, so may be overwritten by compiled content with the same name.

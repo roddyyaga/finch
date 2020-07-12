@@ -57,15 +57,19 @@ let command =
         let config_file = Option.value config_file ~default:"finch.yml" in
         let config_opt = Lib.Config.load config_file in
 
+        let source_root = Lib.Config.get_opt config_opt source_root "root" in
+
         let content_root =
-          Lib.Config.get_opt config_opt content_root "content"
+          Lib.Config.get_string config_opt content_root "content"
         in
         let layouts_root =
-          Lib.Config.get_opt config_opt layouts_root "layouts"
+          Lib.Config.get_string config_opt layouts_root "layouts"
         in
-        let data_root = Lib.Config.get_opt config_opt data_root "data" in
-        let static_dir = Lib.Config.get_opt config_opt static_dir "static" in
-        let output_root = Lib.Config.get_opt config_opt output_root "site" in
+        let data_root = Lib.Config.get_string config_opt data_root "data" in
+        let static_dir = Lib.Config.get_string config_opt static_dir "static" in
+        let output_root =
+          Lib.Config.get_string ~default:"site" config_opt output_root "output"
+        in
 
         let no_delete = Lib.Config.get_bool config_opt no_delete "no_delete" in
         let list_content =
@@ -148,11 +152,16 @@ let command =
             let layout =
               Lib.Load.layout ~env:(Lib.env layouts_root) layout_file
             in
-            let output_path_after_root =
+            let output_link =
               List.Assoc.find_exn ~equal:String.equal
                 (Lib.Model.of_content ~pretty_urls content)
                 "link"
               |> Jingoo.Jg_types.unbox_string
+            in
+            let output_path_after_root =
+              if Filename.(check_suffix output_link dir_sep) then
+                Filename.concat output_link "index.html"
+              else output_link
             in
             let output =
               Lib.make ~pretty_urls ~content_root ~data_root content

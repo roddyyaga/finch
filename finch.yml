@@ -1,0 +1,3 @@
+root: docs_src
+output: docs
+pretty_urls: true
