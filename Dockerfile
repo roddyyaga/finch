@@ -25,37 +25,20 @@ RUN sudo chown -R opam:nogroup . && opam depext -ln finch > depexts
 COPY . .
 RUN eval $(opam env) && sudo chown -R opam:nogroup . && patch bin/dune static-dune.patch && dune build @install
 RUN mkdir finch
+# minimize
+RUN sudo apk add upx
+RUN ls -l /finch/_build/install/default/bin/finch
+RUN ls -l /finch/_build/default/bin
+RUN du -k /finch/_build/default/bin/finch.exe
+RUN sudo chmod 777 /finch/_build/default/bin/finch.exe
+RUN sudo strip --strip-all /finch/_build/default/bin/finch.exe
+RUN sudo upx /finch/_build/default/bin/finch.exe
+RUN du -k /finch/_build/default/bin/finch.exe
+
 # RUN eval $(opam env) && sudo chown -R opam:nogroup . && dune build @install && opam depext -ln app > depexts
 
-# Create the production image
-# FROM python:3.8-alpine
-# WORKDIR /app
-# RUN mkdir app
-# RUN pip install pywebpush
-# TODO - work out how to set the timezone properly
-# RUN apk add tzdata && ln -s /usr/share/zoneinfo/Etc/GMT /etc/localtime
-# For processing images
-# RUN apk --update add imagemagick
-# COPY ./app/send_notification.py /app/app/send_notification.py
-# COPY --from=0 /app/depexts depexts
-# RUN cat depexts | xargs apk --update add && rm -rf /var/cache/apk/*
-# COPY --from=0 /app/_build/install/default/bin/main main.exe
-
-# EXPOSE 3000
-# CMD ./main.exe
-
 FROM scratch
-COPY --from=0 /finch/_build/install/default/bin/finch /bin/finch.exe
+COPY --from=0 /finch/_build/default/bin/finch.exe /bin/finch.exe
 COPY --from=0 /finch/finch /finch
 WORKDIR finch
 ENTRYPOINT ["/bin/finch.exe"]
-
-# FROM debian:buster-slim
-# RUN mkdir finch
-# COPY --from=0 /finch/depexts depexts
-# RUN apt-get update
-# RUN cat depexts | xargs apt-get install --no-install-recommends -y && rm -rf /var/lib/apt/lists/*
-# RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib{apit,dpkg,cache,log}/
-# COPY --from=0 /finch/_build/install/default/bin/finch /bin/finch.exe
-# WORKDIR finch
-# ENTRYPOINT ["/bin/finch.exe"]
