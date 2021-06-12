@@ -90,18 +90,19 @@ let command =
           | None -> (content_root, layouts_root, data_root, static_dir)
         in
 
-        ( if (not no_delete) && Sys.file_exists_exn output_root then
-          let delete_exit_code =
-            Unix.system (Printf.sprintf "rm -r %s" output_root)
-          in
-          ignore delete_exit_code );
+        (if (not no_delete) && Sys.file_exists_exn output_root then
+         let delete_exit_code =
+           Unix.system (Printf.sprintf "rm -r %s" output_root)
+         in
+         ignore delete_exit_code);
 
         if Sys.file_exists_exn static_dir then (
           Unix.mkdir_p output_root;
           let copy_exit_code =
-            Unix.system (Printf.sprintf "cp -rT %s %s" static_dir output_root)
+            let static_dir = Filename.concat static_dir "." in
+            Unix.system (Printf.sprintf "cp -r %s %s" static_dir output_root)
           in
-          ignore copy_exit_code );
+          ignore copy_exit_code);
 
         let jobs = Option.value jobs ~default:4 in
         if not (Sys.file_exists_exn content_root) then
